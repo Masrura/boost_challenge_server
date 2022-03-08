@@ -26,6 +26,7 @@ async function run() {
         app.get('/movies', async (req, res) => {
             const cursor = mainCollection.find({});
             const movies = await cursor.toArray();
+            console.log('ds');
             res.send(movies);
         })
 
@@ -62,7 +63,7 @@ async function run() {
                 const result2 = await mainCollection.findOne(query2);
                 watchlist.push(result2);
             }
-           // console.log('watchlist is ', watchlist)
+            console.log('watchlist is ', watchlist)
             res.json(watchlist);
 
         });
@@ -102,6 +103,16 @@ async function run() {
             const updateDoc = { $set: { role: 'admin' } };
             const result = await usersCollection.updateOne(filter, updateDoc);
             res.json(result);
+        });
+
+        app.delete("/deleteMovie/:id", async (req, res) => {
+            console.log( 'id is:'+  req.params.id);
+            //console.log('id is:' + ObjectId(req.params.name));
+            const result = await watchlistCollection.deleteOne({
+                movieId: req.params.id,
+            });
+            console.log('Result : ', result );
+            res.send(result);
         });
 
     }
